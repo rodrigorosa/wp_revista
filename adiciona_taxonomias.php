@@ -4,8 +4,8 @@
 
 function criando_taxonomia_edicao()
 {
-	$singular = ‘Edição’;
-	$plural = ‘Edições';
+	$singular = 'Edição';
+	$plural = 'Edições';
 
 	$labels = array(
 		'name' => $plural,
@@ -22,10 +22,10 @@ function criando_taxonomia_edicao()
 		'hierarchical' => true
 		);
 
-	register_taxonomy(‘edicao’, ‘artigo’, $args);
+	register_taxonomy('edicao', 'artigo', $args);
 }
 
-add_action( 'init' , 'criando_taxonomia_edicao’ );
+add_action( 'init' , 'criando_taxonomia_edicao' );
 
 
 ?>

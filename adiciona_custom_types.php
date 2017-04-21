@@ -5,8 +5,8 @@
 function registrar_artigos()
 {
 	$descricao = 'Usado para listar os artigos da Revista';
-	$singular = ‘Artigo’;
-	$plural = ‘Artigos’;
+	$singular = 'Artigo';
+	$plural = 'Artigos';
 
 	$labels = array(
 		'name' => $plural,
