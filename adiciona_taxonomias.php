@@ -30,7 +30,8 @@ add_action( 'init' , 'criando_taxonomia_edicao' );
 
 /* Adicionando metadata a taxonomia */
 /* Create */
-function add_status_field($taxonomy) {
+function add_status_field($taxonomy)
+{
 	$todos_status = array(
 	    'n' => 'Não Publicado',
 	    's' => 'Publicado'
@@ -52,7 +53,8 @@ function add_status_field($taxonomy) {
 }
 add_action( 'edicao_add_form_fields', 'add_status_field', 10, 2 );
 
-function save_status_edicao_meta( $term_id, $tt_id ){
+function save_status_edicao_meta( $term_id, $tt_id )
+{
 	error_log('save_status_edicao_meta');
     if( isset( $_POST['status-edicao'] ) && '' !== $_POST['status-edicao'] ){
         $status = sanitize_title( $_POST['status-edicao'] );
@@ -64,7 +66,8 @@ add_action( 'created_edicao', 'save_status_edicao_meta', 10, 2 );
 
 
 /* Update */
-function edit_edicao_field( $term, $taxonomy ){
+function edit_edicao_field( $term, $taxonomy )
+{
 	$todos_status = array(
     	'n' => 'Não Publicado',
     	's' => 'Publicado'
@@ -88,7 +91,8 @@ function edit_edicao_field( $term, $taxonomy ){
 }
 add_action( 'edicao_edit_form_fields', 'edit_edicao_field', 10, 2 );
 
-function update_status_meta( $term_id, $tt_id ){
+function update_status_meta( $term_id, $tt_id )
+{
     if( isset( $_POST['status-edicao'] ) && '' !== $_POST['status-edicao'] ){
         $status = sanitize_title( $_POST['status-edicao'] );
         update_term_meta( $term_id, 'status-edicao', $status );
