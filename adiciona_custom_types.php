@@ -20,7 +20,8 @@ function registrar_artigos()
 	$supports = array(
 		'title',
 		'editor',
-		'thumbnail'
+		'thumbnail',
+		'custom-fields'
 	);
 
 	$args = array(
