@@ -1,7 +1,6 @@
 <?php
 
 /* Criando a taxonomia Edição */
-
 function criando_taxonomia_edicao()
 {
 	$singular = 'Edição';
@@ -73,7 +72,6 @@ function edit_edicao_field( $term, $taxonomy )
     	's' => 'Publicado'
     );
 
-    // get current
     $status_edicao = get_term_meta( $term->term_id, 'status-edicao', true );
     ?>
 
@@ -99,5 +97,46 @@ function update_status_meta( $term_id, $tt_id )
     }
 }
 add_action( 'edited_edicao', 'update_status_meta', 10, 2 );
+
+
+/* Adicionando o cabeçalho da tabela de termos */
+function add_status_edicao_column( $columns )
+{
+    $columns['status_edicao'] = 'Status';
+    return $columns;
+}
+add_filter('manage_edit-edicao_columns', 'add_status_edicao_column' );
+
+
+/* Adicionando o conteúdo da tabela de termos */
+function add_status_edicao_column_content( $content, $column_name, $term_id )
+{
+    $todos_status = array(
+    	'n' => 'Não Publicado',
+    	's' => 'Publicado'
+    );
+
+    if( $column_name !== 'status_edicao' ){
+        return $content;
+    }
+
+    $term_id = absint( $term_id );
+    $status_edicao = get_term_meta( $term_id, 'status-edicao', true );
+
+    if( !empty( $status_edicao ) ){
+        $content .= esc_attr( $todos_status[ $status_edicao ] );
+    }
+
+    return $content;
+}
+add_filter('manage_edicao_custom_column', 'add_status_edicao_column_content', 10, 3 );
+
+/* Adicionando ordenação no cabeçalho da tabela de termos */
+function add_status_edicao_column_sortable( $sortable )
+{
+    $sortable[ 'status_edicao' ] = 'status_edicao';
+    return $sortable;
+}
+add_filter( 'manage_edit-edicao_sortable_columns', 'add_status_edicao_column_sortable' );
 
 ?>
