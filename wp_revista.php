@@ -25,6 +25,8 @@ function inicializar()
 {
 	require_once( 'adiciona_custom_types.php' );
 	require_once( 'adiciona_taxonomias.php' );
+	require_once( 'adiciona_meta_term_status_edicao.php' );
+	require_once( 'adiciona_meta_term_data_edicao.php' );
 
 }
 add_action( 'plugins_loaded', 'inicializar', 9999999999 ); //espera todos os plugins serem carregados
