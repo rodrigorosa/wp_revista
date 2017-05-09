@@ -16,11 +16,8 @@ Tags:
 */
 
 
-/**
- * Instantiate IssueM class, require helper files
- *
- * @since 1.2.0
- */
+defined( 'ABSPATH' ) or die( 'Nop!' );
+
 function inicializar()
 {
 	require_once( 'adiciona_custom_types.php' );
