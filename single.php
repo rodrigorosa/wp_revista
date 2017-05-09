@@ -24,29 +24,31 @@ get_header(); ?>
 			get_template_part( 'content', get_post_format() );
         $submited = isset($_POST['submit-avaliacao']);
         if ($submited) {
-          add_post_meta($post->ID, 'avaliacoes', array(
-            $_POST['revisor'] => $_POST
-          ));
+          add_post_meta($post->ID, 'avaliacoes', $_POST);
         }
 
-        $avaliadores = get_post_meta($post->ID, 'revisores');
-        // código hardcode, deve ser customizado lá no admin isto
-        if (count($avaliadores) == 0) {
-          add_post_meta($post->ID, 'revisores', ['17']);
-        } else {
-          $avaliacoes = get_post_meta($post->ID, 'avaliacoes');
-          $avaliacao = $avaliacoes[count($avaliacoes) - 1][$_GET['revisor']];
-        }
+        $avaliacoes = get_post_meta($post->ID, 'avaliacoes');
+        $avaliacao = $avaliacoes[count($avaliacoes) - 1][$_GET['revisor']];
 
-        $finded = count($avaliadores) > 0 && in_array($_GET['revisor'], $avaliadores[0]);
+        $finded = NULL;
+        if (isset($_GET['r'])) {
+          $revisores = get_post_meta($post->ID, 'revisores');
+          foreach ($revisores as $key => $revisor) {
+            if ($revisor['token'] == $_GET['r']) {
+              $finded = $revisor;
+              break;
+            }
+          }
+        }
       ?>
 
-      <?php if ($finded) { ?>
+      <?php if ($finded != NULL) { ?>
         <div class="article" style="margin: 5px 80px; background-color: white; padding: 15px;">
           <?php if ($submited) { ?>
             <b>Avaliação submetida com sucesso!!</b>
           <?php } else { ?>
             <h2>Avaliação</h2>
+            <b>Olá <?= $finded['name'] ?></b>
             <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>
             <form class="" action="" method="post">
               <input type="hidden" name="revisor" value="<?= $_GET['revisor'] ?>">
