@@ -7,10 +7,11 @@ if ( !function_exists( 'get_edicoes_publicadas' ) ) {
 	function get_edicoes_publicadas($atts)
 	{
 		$edicoes = get_terms( array(
-			'orderby' => 'data-edicao',
 			'taxonomy' => 'edicao',
-			'meta_key' => 'status',
-			'meta_value' => 'S'
+			'orderby' => 'data-edicao',
+			'hide_empty' => false,
+			'meta_key' => 'status-edicao',
+			'meta_value' => 's'
 			));
 
 		$html =  '';
@@ -25,12 +26,12 @@ if ( !function_exists( 'get_edicoes_publicadas' ) ) {
 	add_shortcode('edicoes_publicadas', 'get_edicoes_publicadas');
 
 
-
 	function get_edicoes($atts)
 	{
 		$edicoes = get_terms( array(
-			'orderby' => 'data-edicao',
-			'taxonomy' => 'edicao'
+			'taxonomy' => 'edicao',
+			'hide_empty' => false,
+			'orderby' => 'data-edicao'
 			));
 
 		$html =  '';
