@@ -14,12 +14,13 @@ if ( !function_exists( 'get_edicoes_publicadas' ) ) {
 			'meta_value' => 's'
 			));
 
-		$html =  '';
+		$html = '<ul>';
 		if ( !empty( $edicoes ) ) {
 			foreach($edicoes as $edicao) {
-				$html .= '<a href="' . get_term_link( $edicao, 'edicao' ) . '">' . $edicao->name . '</a>';
+				$html .= '<li><a href="' . get_term_link( $edicao, 'edicao' ) . '">' . $edicao->name . '</a></li>';
 			}
 		}
+		$html .= '</ul>';
 		return $html;
 	}
 
@@ -34,12 +35,14 @@ if ( !function_exists( 'get_edicoes_publicadas' ) ) {
 			'orderby' => 'data-edicao'
 			));
 
-		$html =  '';
+		$html = '<ul>';
 		if ( !empty( $edicoes ) ) {
 			foreach($edicoes as $edicao) {
-				$html .= '<a href="' . get_term_link( $edicao, 'edicao' ) . '">' . $edicao->name . '</a>';
+				$html .= '<li><a href="' . get_term_link( $edicao, 'edicao' ) . '">' . $edicao->name . '</a></li>';
 			}
 		}
+    $html .= '</ul>';
+
 		return $html;
 	}
 
