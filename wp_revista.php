@@ -27,7 +27,8 @@ function inicializar()
 	require_once( 'adiciona_meta_term_data_edicao.php' );
 	require_once( 'adiciona_shortcodes.php' );
 	require_once( 'adiciona_css.php' );
-	require_once( 'adiciona_admin_avaliadores.php');
+  require_once( 'adiciona_avaliacoes.php');
+  require_once( 'adiciona_admin_avaliadores.php');
   require_once( 'adiciona_revisao_posts.php');
   require_once( 'adiciona_metaboxes.php' );
 }
