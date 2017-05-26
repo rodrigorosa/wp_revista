@@ -106,7 +106,7 @@ if ( !function_exists( 'add_status_field' ) ) {
 	        $content .= esc_attr( $todos_status[ $status_edicao ] );
 	    }
 
-	    return $content;
+			echo $content;
 	}
 	add_filter('manage_edicao_custom_column', 'add_status_edicao_column_content', 10, 3 );
 

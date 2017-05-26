@@ -82,7 +82,7 @@ if ( !function_exists( 'add_data_field' ) ) {
 	        $content .= esc_attr(  $data_edicao );
 	    }
 
-	    return date('d/m/Y', strtotime($content));
+	    echo date('d/m/Y', strtotime($content));
 	}
 	add_filter('manage_edicao_custom_column', 'add_data_edicao_column_content', 10, 3 );
 
