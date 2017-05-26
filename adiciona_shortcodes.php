@@ -14,10 +14,16 @@ if ( !function_exists( 'get_edicoes_publicadas' ) ) {
 			'meta_value' => 's'
 			));
 
-		$html = '<ul>';
+		$html = '<ul class="edicao">';
 		if ( !empty( $edicoes ) ) {
 			foreach($edicoes as $edicao) {
-				$html .= '<li><a href="' . get_term_link( $edicao, 'edicao' ) . '">' . $edicao->name . '</a></li>';
+				$image_id = get_term_meta( $edicao->term_id, 'image', true );
+				$image_data = wp_get_attachment_image_src( $image_id, 'full' );
+				$image = $image_data[0];
+
+				if ( ! empty( $image ) ) {
+				    $html .= '<li><a href="' . get_term_link( $edicao, 'edicao' ) . '">' . '<img src="' . esc_url( $image ) . '" />' . '</a></li>';
+				}
 			}
 		}
 		$html .= '</ul>';
@@ -35,10 +41,16 @@ if ( !function_exists( 'get_edicoes_publicadas' ) ) {
 			'orderby' => 'data-edicao'
 			));
 
-		$html = '<ul>';
+		$html = '<ul class="edicao">';
 		if ( !empty( $edicoes ) ) {
 			foreach($edicoes as $edicao) {
-				$html .= '<li><a href="' . get_term_link( $edicao, 'edicao' ) . '">' . $edicao->name . '</a></li>';
+				$image_id = get_term_meta( $edicao->term_id, 'image', true );
+				$image_data = wp_get_attachment_image_src( $image_id, 'full' );
+				$image = $image_data[0];
+
+				if ( ! empty( $image ) ) {
+				    $html .= '<li><a href="' . get_term_link( $edicao, 'edicao' ) . '">' . '<img src="' . esc_url( $image ) . '" />' . '</a></li>';
+				}
 			}
 		}
     $html .= '</ul>';
