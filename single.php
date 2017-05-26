@@ -27,22 +27,14 @@ get_header(); ?>
           add_post_meta($post->ID, 'avaliacoes', $_POST);
         }
 
-        $avaliacoes = get_post_meta($post->ID, 'avaliacoes');
-        $avaliacao = $avaliacoes[count($avaliacoes) - 1][$_GET['revisor']];
-
+        $postRevisao = new PostRevisao($post);
         $finded = NULL;
         if (isset($_GET['r'])) {
-          $revisores = get_post_meta($post->ID, 'revisores');
-          foreach ($revisores as $key => $revisor) {
-            if ($revisor['token'] == $_GET['r']) {
-              $finded = $revisor;
-              break;
-            }
-          }
+          $finded = $postRevisao->getRevisor($_GET['r']);
         }
-      ?>
+        ?>
 
-      <?php if ($finded != NULL) { ?>
+        <?php if ($finded != NULL) { ?>
         <div class="article" style="margin: 5px 80px; background-color: white; padding: 15px;">
           <?php if ($submited) { ?>
             <b>Avaliação submetida com sucesso!!</b>
@@ -51,11 +43,19 @@ get_header(); ?>
             <b>Olá <?= $finded['name'] ?></b>
             <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>
             <form class="" action="" method="post">
-              <input type="hidden" name="revisor" value="<?= $_GET['revisor'] ?>">
-              <label for="ortografia">Ortografia</label>
-              <?php for ($i = 1; $i <= 5; $i++) { ?>
-                <input type="radio" name="ortografia" value="<?= $i ?>" required <?= $avaliacao['ortografia'] == $i ? 'checked' : '' ?>> <?= $i ?>
+              <input type="hidden" name="revisor" value="<?= $finded['token'] ?>">
+              <?php foreach ($postRevisao->getCriterios() as $key => $value) { ?>
+                <label for="<?= $key ?>"><?= $value ?></label>
+                <?php if ($key == 'comentarios') { ?>
+                  <br /><textarea name="<?= $key ?>" rows="8" cols="80"></textarea>
+                <?php } else { ?>
+                  <?php for ($i = 1; $i <= 5; $i++) { ?>
+                    <input type="radio" name="<?= $key ?>" value="<?= $i ?>" required> <?= $i ?>
+                    <?php } ?>
+                <?php } ?>
+                <br />
               <?php } ?>
+
               <br><br>
               <div style="text-align: right">
                 <button type="submit" name="submit-avaliacao">Enviar!</button>
@@ -63,7 +63,7 @@ get_header(); ?>
             </form>
           <?php } ?>
         </div>
-      <?php } ?>
+        <?php } ?>
       <?
 
 

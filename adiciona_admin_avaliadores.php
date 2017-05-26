@@ -2,6 +2,10 @@
   $id = isset($_GET['post']) ? $_GET['post'] : NULL;
 
   add_action('post_submitbox_start', function() {
+    if (!current_user_can('editor') && !current_user_can('administrator')) {
+      return;
+    }
+
     $id = isset($_GET['post']) ? $_GET['post'] : NULL;
 
     if ($id != NULL) {
