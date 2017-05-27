@@ -39,6 +39,21 @@ get_header(); ?>
           <?php if ($submited) { ?>
             <b>Avaliação submetida com sucesso!!</b>
           <?php } else { ?>
+            <h3>Autores</h3>
+            <?= get_post_meta(get_post()->ID, 'authors')[0] ?>
+
+            <h3>Resumo</h3>
+            <?= get_post_meta(get_post()->ID, 'abstract-pt-br')[0] ?>
+
+            <h3>Abstract</h3>
+            <?= get_post_meta(get_post()->ID, 'abstract-en')[0] ?>
+
+            <h3>Keywords</h3>
+            <?= get_post_meta(get_post()->ID, 'keywords')[0] ?>
+
+            <h3>Referências</h3>
+            <?= get_post_meta(get_post()->ID, 'references')[0] ?>
+
             <h2>Avaliação</h2>
             <b>Olá <?= $finded['name'] ?></b>
             <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>
