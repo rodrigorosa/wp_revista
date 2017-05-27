@@ -45,6 +45,21 @@
             'email' => $_POST['email']
           );
           add_post_meta($id, 'revisores', $revisor);
+
+          // E-Mail
+          function wpdocs_set_html_mail_content_type() {
+            return 'text/html';
+          }
+          add_filter( 'wp_mail_content_type', 'wpdocs_set_html_mail_content_type' );
+          $post = get_post();
+          $link = get_post_permalink($id). '&r=' . $revisor['token'];
+          $link = "<a href=\"{$link}\">{$link}</a>";
+          $subject = 'Convite para editar ' . get_option('blogname');
+          $email = "<h2>Olá, {$revisor['name']}. Você foi indicado para avaliar o artigo {$post->post_title}</h2>.";
+          $email .= "<p>Você pode acessar o artigo através do link: {$link}</p>";
+          $email .= '<p>Para mais informações acesse: <a href="' . get_site_url() . '">' . get_site_url() . '</a></p>';
+
+          $result = wp_mail($revisor['email'], $subject, $email);
         }
       ?>
 
@@ -60,16 +75,17 @@
 
       <script>
         jQuery(() => {
-          jQuery('#add-revisor').one('click', (event) => {
+          jQuery('#add-revisor').on('click', (event) => {
             let payload = jQuery('[data-avaliador]').toArray().reduce((result, input) => {
               let el = jQuery(input);
               result[el.data('avaliador')] = el.val();
               return result;
             }, {'add-revisor': true});
 
-            let isValid = !!Object.values(payload).filter(value => !value).length;
-            if (isValid) {
-              alert('Preencha todos os dados.');
+            let isValid = !Object.values(payload).filter(value => !value).length;
+            isValid = isValid && payload.email.indexOf('@') >= 0;
+            if (!isValid) {
+              alert('Preencha todos os dados corretamente.');
               return;
             }
 

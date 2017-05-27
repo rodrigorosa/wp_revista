@@ -8,6 +8,10 @@ function add_content_before_editor() {
   }
 
   $post = get_post();
+  if ($post->post_type != 'artigo') {
+    return;
+  }
+
   $postRevisao = new PostRevisao($post);
   $avaliacoes = $postRevisao->avaliacoes();
 ?>
