@@ -8,7 +8,8 @@ if ( !function_exists( 'get_edicoes_publicadas' ) ) {
 	{
 		$edicoes = get_terms( array(
 			'taxonomy' => 'edicao',
-			'orderby' => 'data-edicao',
+			'orderby' => 'meta_value',
+			'order' => 'DESC',
 			'hide_empty' => false,
 			'meta_key' => 'status-edicao',
 			'meta_value' => 's'
@@ -38,7 +39,8 @@ if ( !function_exists( 'get_edicoes_publicadas' ) ) {
 		$edicoes = get_terms( array(
 			'taxonomy' => 'edicao',
 			'hide_empty' => false,
-			'orderby' => 'data-edicao'
+			'orderby' => 'meta_value',
+			'order' => 'DESC'
 			));
 
 		$html = '<ul class="edicao">';
