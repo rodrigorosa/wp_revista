@@ -2,6 +2,10 @@
   list-style: none;
 }
 
+.edicao-titulo {
+  font-weight: bold;
+}
+
 .edicao li {
   display: inline;
 }

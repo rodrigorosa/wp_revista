@@ -23,7 +23,12 @@ if ( !function_exists( 'get_edicoes_publicadas' ) ) {
 				$image = $image_data[0];
 
 				if ( ! empty( $image ) ) {
-				    $html .= '<li><a href="' . get_term_link( $edicao, 'edicao' ) . '">' . '<img src="' . esc_url( $image ) . '" />' . '</a></li>';
+					$html .= '<li>
+											<a href="' . get_term_link( $edicao, 'edicao' ) . '">' .
+											'<img src="' . esc_url( $image ) . '" />' .
+											'<p>' . $edicao->name . ' </p' .
+											'</a>
+										</li>';
 				}
 			}
 		}
@@ -51,7 +56,12 @@ if ( !function_exists( 'get_edicoes_publicadas' ) ) {
 				$image = $image_data[0];
 
 				if ( ! empty( $image ) ) {
-				    $html .= '<li><a href="' . get_term_link( $edicao, 'edicao' ) . '">' . '<img src="' . esc_url( $image ) . '" />' . '</a></li>';
+				    $html .= '<li>
+												<a href="' . get_term_link( $edicao, 'edicao' ) . '">' .
+												'<img src="' . esc_url( $image ) . '" />' .
+												'<p class="edicao-titulo">' . $edicao->name . ' </p' .
+												'</a>
+											</li>';
 				}
 			}
 		}
