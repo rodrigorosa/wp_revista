@@ -31,6 +31,9 @@ function inicializar()
   require_once( 'adiciona_admin_avaliadores.php');
   require_once( 'adiciona_revisao_posts.php');
   require_once( 'adiciona_metaboxes.php' );
+  require_once( 'post_custom_fields.php' );
+
+
 }
 
 add_action( 'plugins_loaded', 'inicializar', 9999999999 ); //espera todos os plugins serem carregados

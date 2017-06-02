@@ -1,107 +1,109 @@
 <?php
-/**
- * The template for displaying all single posts and attachments
- *
- * @package WordPress
- * @subpackage Twenty_Fifteen
- * @since Twenty Fifteen 1.0
- */
+	if ( !defined('ABSPATH') ){ die(); }
 
-get_header(); ?>
+	global $avia_config;
 
-	<div id="primary" class="content-area">
-		<main id="main" class="site-main" role="main">
+	/*
+	 * get_header is a basic wordpress function, used to retrieve the header.php file in your theme directory.
+	 */
+	 get_header();
 
-		<?php
-		// Start the loop.
-		while ( have_posts() ) : the_post();
+	$title  = __('Blog - Latest News', 'avia_framework'); //default blog title
+	$t_link = home_url('/');
+	$t_sub = "";
 
-			/*
-			 * Include the post format-specific template for the content. If you want to
-			 * use this in a child theme, then include a file called called content-___.php
-			 * (where ___ is the post format) and that will be used instead.
-			 */
-			get_template_part( 'content', get_post_format() );
-        $submited = isset($_POST['submit-avaliacao']);
-        if ($submited) {
-          add_post_meta($post->ID, 'avaliacoes', $_POST);
-        }
+	if(avia_get_option('frontpage') && $new = avia_get_option('blogpage'))
+	{
+		$title 	= get_the_title($new); //if the blog is attached to a page use this title
+		$t_link = get_permalink($new);
+		$t_sub =  avia_post_meta($new, 'subtitle');
+	}
 
-        $postRevisao = new PostRevisao($post);
-        $finded = NULL;
-        if (isset($_GET['r'])) {
-          $finded = $postRevisao->getRevisor($_GET['r']);
-        }
-        ?>
+	if( get_post_meta(get_the_ID(), 'header', true) != 'no') echo avia_title(array('heading'=>'strong', 'title' => $title, 'link' => $t_link, 'subtitle' => $t_sub));
 
-        <?php if ($finded != NULL) { ?>
-        <div class="article" style="margin: 5px 80px; background-color: white; padding: 15px;">
-          <?php if ($submited) { ?>
-            <b>Avaliação submetida com sucesso!!</b>
-          <?php } else { ?>
-            <h3>Autores</h3>
-            <?= get_post_meta(get_post()->ID, 'authors')[0] ?>
+	do_action( 'ava_after_main_title' );
 
-            <h3>Resumo</h3>
-            <?= get_post_meta(get_post()->ID, 'abstract-pt-br')[0] ?>
+?>
 
-            <h3>Abstract</h3>
-            <?= get_post_meta(get_post()->ID, 'abstract-en')[0] ?>
+		<div class='container_wrap container_wrap_first main_color <?php avia_layout_class( 'main' ); ?>'>
 
-            <h3>Keywords</h3>
-            <?= get_post_meta(get_post()->ID, 'keywords')[0] ?>
+			<div class='container template-blog template-single-blog '>
 
-            <h3>Referências</h3>
-            <?= get_post_meta(get_post()->ID, 'references')[0] ?>
+				<main class='content units <?php avia_layout_class( 'content' ); ?> <?php echo avia_blog_class_string(); ?>' <?php avia_markup_helper(array('context' => 'content','post_type'=>'post'));?>>
 
-            <h2>Avaliação</h2>
-            <b>Olá <?= $finded['name'] ?></b>
-            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>
-            <form class="" action="" method="post">
-              <input type="hidden" name="revisor" value="<?= $finded['token'] ?>">
-              <?php foreach ($postRevisao->getCriterios() as $key => $value) { ?>
-                <label for="<?= $key ?>"><?= $value ?></label>
-                <?php if ($key == 'comentarios') { ?>
-                  <br /><textarea name="<?= $key ?>" rows="8" cols="80"></textarea>
-                <?php } else { ?>
-                  <?php for ($i = 1; $i <= 5; $i++) { ?>
-                    <input type="radio" name="<?= $key ?>" value="<?= $i ?>" required> <?= $i ?>
-                    <?php } ?>
-                <?php } ?>
-                <br />
-              <?php } ?>
+                    <?php
+                    /* Run the loop to output the posts.
+                    * If you want to overload this in a child theme then include a file
+                    * called loop-index.php and that will be used instead.
+                    *
+                    */
 
-              <br><br>
-              <div style="text-align: right">
-                <button type="submit" name="submit-avaliacao">Enviar!</button>
-              </div>
-            </form>
-          <?php } ?>
-        </div>
-        <?php } ?>
-      <?
+                        get_template_part( 'includes/loop', 'index' );
+
+                        //show related posts based on tags if there are any
+                        get_template_part( 'includes/related-posts');
+                        $submited = isset($_POST['submit-avaliacao']);
+                        if ($submited) {
+                          add_post_meta($post->ID, 'avaliacoes', $_POST);
+                        }
+
+                        $postRevisao = new PostRevisao($post);
+                        $finded = NULL;
+                        if (isset($_GET['r'])) {
+                          $finded = $postRevisao->getRevisor($_GET['r']);
+                        }
+                        ?>
+
+                        <?php if ($finded != NULL) { ?>
+                        <div class="article" style="margin: 5px 80px; background-color: white; padding: 15px;">
+                          <?php if ($submited) { ?>
+                            <b>Avaliação submetida com sucesso!!</b>
+                          <?php } else { ?>
+                            <h2>Avaliação</h2>
+                            <b>Olá <?= $finded['name'] ?></b>
+                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>
+                            <form class="" action="" method="post">
+                              <input type="hidden" name="revisor" value="<?= $finded['token'] ?>">
+                              <?php foreach ($postRevisao->getCriterios() as $key => $value) { ?>
+                                <label for="<?= $key ?>"><?= $value ?></label>
+                                <?php if ($key == 'comentarios') { ?>
+                                  <br /><textarea name="<?= $key ?>" rows="8" cols="80"></textarea>
+                                <?php } else { ?>
+                                  <?php for ($i = 1; $i <= 5; $i++) { ?>
+                                    <input type="radio" name="<?= $key ?>" value="<?= $i ?>" required> <?= $i ?>
+                                    <?php } ?>
+                                <?php } ?>
+                                <br />
+                              <?php } ?>
+
+                              <br><br>
+                              <div style="text-align: right">
+                                <button type="submit" name="submit-avaliacao">Enviar!</button>
+                              </div>
+                            </form>
+                          <?php } ?>
+                        </div>
+                        <?php } ?><?php
+                        //wordpress function that loads the comments template "comments.php"
+                        comments_template();
+
+                    ?>
+
+				<!--end content-->
+				</main>
+
+				<?php
+				$avia_config['currently_viewing'] = "blog";
+				//get the sidebar
+				get_sidebar();
 
 
-			// If comments are open or we have at least one comment, load up the comment template.
-			if ( comments_open() || get_comments_number() ) :
-				comments_template();
-			endif;
+				?>
 
-			// Previous/next post navigation.
-			the_post_navigation( array(
-				'next_text' => '<span class="meta-nav" aria-hidden="true">' . __( 'Next', 'twentyfifteen' ) . '</span> ' .
-					'<span class="screen-reader-text">' . __( 'Next post:', 'twentyfifteen' ) . '</span> ' .
-					'<span class="post-title">%title</span>',
-				'prev_text' => '<span class="meta-nav" aria-hidden="true">' . __( 'Previous', 'twentyfifteen' ) . '</span> ' .
-					'<span class="screen-reader-text">' . __( 'Previous post:', 'twentyfifteen' ) . '</span> ' .
-					'<span class="post-title">%title</span>',
-			) );
 
-		// End the loop.
-		endwhile;
-		?>
+			</div><!--end container-->
 
-		</main><!-- .site-main -->
-	</div><!-- .content-area -->
+		</div><!-- close default .container_wrap element -->
+
 
 <?php get_footer(); ?>

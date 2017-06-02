@@ -16,3 +16,16 @@
   width: auto;
   height: auto;
 }
+
+#authors {
+  text-align: right;
+}
+
+#authors ul li {
+  list-style: none;
+  line-height: 15px;
+}
+
+#custom-fields .meta-info {
+  text-align: justify;
+}
