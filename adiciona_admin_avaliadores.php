@@ -68,6 +68,10 @@
       <script>
         jQuery(() => {
           jQuery('#add-revisor').on('click', (event) => {
+            let button = jQuery('#add-revisor');
+            button.attr('disabled', true);
+            button.text('Enviando...');
+
             let payload = jQuery('[data-avaliador]').toArray().reduce((result, input) => {
               let el = jQuery(input);
               result[el.data('avaliador')] = el.val();
@@ -85,6 +89,8 @@
             jQuery.post(window.location.href, payload).done(() => {
               location.reload();
             }).fail((error) => {
+              button.removeAttr('disabled');
+              button.text('Adicionar');
               jQuery('body').css('cursor', 'default');
               console.error('Falha ao enviar os dados', error);
               alert('Falha ao enviar os dados');
