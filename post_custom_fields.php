@@ -44,10 +44,10 @@
   }
 
   function addCustomFields($content) {
+    global $post;
     if ($post->post_type != 'artigo') {
       return $content;
     }
-    global $post;
     $postCustomFields =  new PostCustomFields($post);
     return $postCustomFields->toHtml() .
       $content .
