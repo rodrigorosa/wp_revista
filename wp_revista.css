@@ -29,3 +29,13 @@
 #custom-fields .meta-info {
   text-align: justify;
 }
+
+.form-submit-avaliacao button[type=submit] {
+  width: 100%;
+}
+
+p.avaliacao-success {
+  font-weight: bold;
+  text-align: center;
+  font-size: 150%;
+}

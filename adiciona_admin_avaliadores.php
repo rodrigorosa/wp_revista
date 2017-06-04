@@ -29,10 +29,12 @@
       </div>
 
       <div id="modal-add-revisor" style="display:none;">
-        <h3>Novo revisor</h3>
-        <input data-avaliador="name" placeholder="Nome"><br>
-        <input data-avaliador="email" placeholder="e-Mail"><br>
-        <button type="button" id="add-revisor" class="button button-primary button-large">Adicionar</button>
+        <div class="container-modal-add-revisor">
+          <h3>Novo revisor</h3>
+          <input data-avaliador="name" placeholder="Nome"><br>
+          <input data-avaliador="email" placeholder="e-Mail"><br>
+          <button type="button" id="add-revisor" class="button">Adicionar</button>
+        </div>
       </div>
 
       <?php
@@ -62,16 +64,6 @@
           $result = wp_mail($revisor['email'], $subject, $email);
         }
       ?>
-
-      <style media="screen">
-        #form-add-revisor {
-          width: 100%;
-          text-align: center;
-          input {
-            width: 70%;
-          }
-        }
-      </style>
 
       <script>
         jQuery(() => {
