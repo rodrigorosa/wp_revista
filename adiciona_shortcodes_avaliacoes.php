@@ -43,9 +43,10 @@ if (!function_exists('formularioAvaliacao')) {
 
   function gravarAvaliacao($revisor) {
     global $post;
-    $dateTime = new \DateTime();
-    $_POST['created_at'] = $dateTime->format('c');
-    add_post_meta($post->ID, 'avaliacoes', $_POST);
+
+    $service = new ArtigoService($post);
+    $service->gravarAvaliacao($_POST);
+    
     return '<p class="avaliacao-success">Avaliação submetida com sucesso!</p>';
 
   }
