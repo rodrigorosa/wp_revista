@@ -20,6 +20,7 @@ defined( 'ABSPATH' ) or die( 'Nop!' );
 
 function inicializar()
 {
+  require_once( 'artigo_service.php' );
   require_once( 'post_revisao.php' );
   require_once( 'adiciona_custom_types.php' );
   require_once( 'adiciona_taxonomias.php' );

@@ -1,5 +1,5 @@
 <?php
-
+/* Permite que o post seja visualizado mesmo antes da aprovação, usado para avaliadores*/
 
 function set_post_to_publish($posts) {
   // Remove the filter again, otherwise it will be applied to other queries too.
