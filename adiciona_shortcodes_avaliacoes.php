@@ -46,7 +46,7 @@ if (!function_exists('formularioAvaliacao')) {
 
     $service = new ArtigoService($post);
     $service->gravarAvaliacao($_POST);
-    
+
     return '<p class="avaliacao-success">Avaliação submetida com sucesso!</p>';
 
   }
@@ -102,6 +102,7 @@ if (!function_exists('formularioAvaliacao')) {
 	add_shortcode('formulario_avaliacao', 'formularioAvaliacao');
   add_shortcode('avaliador', 'avaliador');
   add_shortcode('pode_avaliar', 'podeAvaliar');
+  add_filter('widget_text','do_shortcode');
 }
 
 ?>

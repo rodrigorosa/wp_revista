@@ -63,7 +63,7 @@ if ( !function_exists( 'registrar_artigos' ) ) {
 	}
 
 
-	add_action('init', 'registrar_artigos');
+	add_action('init', 'registrar_artigos', 0);
 
 
   // Adicionar Status no select do artigo
