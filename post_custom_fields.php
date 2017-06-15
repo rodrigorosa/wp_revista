@@ -33,7 +33,7 @@
       return "<p class=\"meta-info {$meta}\"><b>{$title}: </b>{$this->getMeta($meta)}</p>";
     }
 
-    private function isReviewer() {
+    public function isReviewer() {
       $postRevisao = new PostRevisao($this->post);
       return $postRevisao->getRevisor($_GET['r']) != NULL;
     }
@@ -49,10 +49,31 @@
       return $content;
     }
     $postCustomFields =  new PostCustomFields($post);
+
+    if (is_archive()) {
+      return $postCustomFields->getSingleHtml('Resumo','abstract-pt-br');
+    }
+
     return $postCustomFields->toHtml() .
       $content .
       '<hr />' .
       $postCustomFields->getSingleHtml('Referências', 'references');
   }
+
+  function theAuthor($content) {
+    if (is_archive()) {
+      return '<style>.post-meta-infos { display: none }</style>';
+    }
+
+    global $post;
+    $postCustomFields =  new PostCustomFields($post);
+
+    if ($postCustomFields->isReviewer()) {
+      return '';
+    }
+
+    return $content;
+  }
   add_filter('the_content', 'addCustomFields');
+  add_filter('the_author', 'theAuthor');
 ?>
