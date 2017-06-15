@@ -20,24 +20,29 @@
       $this->alterarStatus('revisado');
 
       // TODO: Enviar e-mail para autor/editor
+      // Enviar e-mail para autor com informação de avaliação (Link)
     }
 
     public function aprovar() {
       $this->alterarStatus('publish');
 
       // TODO: Enviar e-mail para autor
+      // Enviar e-mail para o artigo com aprovação
     }
 
     public function rejeitar() {
       $this->alterarStatus('trash');
 
       // TODO: Enviar e-mail para autor
+      // Autor recebe e-mail
     }
 
     private function alterarStatus($status) {
-      global $wpdb;
-      $wpdb->update($wpdb->posts, array('post_status' => $status), array('ID' => $this->post->ID));
-      clean_post_cache($this->post->ID);
+      $updatePost = array(
+        'ID' => $this->post->ID,
+        'post_status' => $status
+      );
+      wp_update_post($updatePost);
       wp_transition_post_status($status, $this->post->post_status, $this->post);
     }
 
