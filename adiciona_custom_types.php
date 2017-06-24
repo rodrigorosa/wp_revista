@@ -2,6 +2,7 @@
 
 if ( !function_exists( 'registrar_artigos' ) ) {
 
+
   // Adicionar status
   function adicionar_status() {
     register_post_status('em_revisao', array(
@@ -89,12 +90,34 @@ if ( !function_exists( 'registrar_artigos' ) ) {
   }
   add_action('admin_footer-post.php', 'jc_append_post_status_list');
 
+  function adiciona_modais($id) {
+    echo '<div id="enviar-email" style="display:none;">
+      <h3>Enviar e-mail para autor</h3>
+      <form class="validate" method="POST">
+        <input type="hidden" id="post_id" name="post_id" value="' . $id . '" >
+        <div class="form-field form-required">
+          <label for="subject">Assunto</label>
+          <input type="text" name="subject" placeholder="Assunto" required />
+        </div>
+
+        <div class="form-field form-required">
+          <label for="content">Conteúdo</label>
+          <textarea rows="10" name="content"></textarea>
+        </div>
+
+        <button type="submit" name="acao" value="send-email" class="button">Enviar</button>
+      </form>
+    </div>';
+  }
+  add_action('all_admin_notices', 'adiciona_modais');
+
   /* Admin Custom Table */
   add_filter('manage_artigo_posts_columns', 'bs_event_table_head');
   function bs_event_table_head($defaults) {
     $defaults['authors'] = 'Autores';
     $defaults['status'] = 'Status';
     $defaults['edition'] = 'Edição';
+    $defaults['reviewers'] = 'Qtd.Revisores';
     $defaults['actions'] = 'Ações';
     return $defaults;
   }
@@ -110,16 +133,33 @@ if ( !function_exists( 'registrar_artigos' ) ) {
       echo $status->label;
     }
 
+    if ($column_name == 'reviewers') {
+      $service = new PostRevisao(get_post($post_id));
+      $revisores = $service->revisores();
+      echo count($revisores);
+    }
+
     if ($column_name == 'actions') {
       $actions = array();
-      if ($status != 'trash') {
-        $actions[] = '<a href="' . admin_url('edit.php?post_type=artigo&id=' . $post_id . '&do_action=reject') . '">Rejeitar</a>';
-      }
+
+      $actions[] = '<a title="Enviar e-mail" class="button send-email" data-id="' . $post_id . '" rel="modal:open" href="#enviar-email">
+      <i class="fa fa-envelope"></i></i></a>';
+
+      $actions[] = '<a title="Adicionar revisor" href="#ex1" rel="modal:open" class="button">
+        <i class="fa fa-share"></i></i></a>';
+
+
       if ($status != 'publish') {
-        $actions[] = '<a href="' . admin_url('edit.php?post_type=artigo&id=' . $post_id . '&do_action=approve') . '">Aprovar</a>';
+        $actions[] = '<a title="Aprovar" class="button" href="' . admin_url('edit.php?post_type=artigo&id=' . $post_id . '&do_action=approve') . '">
+          <i class="fa fa-check"></i></i></a>';
       }
 
-      echo join($actions, ' | ');
+      if ($status != 'trash') {
+        $actions[] = '<a title="Rejeitar" class="widget button" href="' . admin_url('edit.php?post_type=artigo&id=' . $post_id . '&do_action=reject') . '">
+        <i class="fa fa-times"></i></i></a>';
+      }
+
+      echo join($actions, '');
     }
 
     if ($column_name == 'edition') {
@@ -145,6 +185,20 @@ if ( !function_exists( 'registrar_artigos' ) ) {
   if (isset($_GET['do_action'])) {
     $action = $_GET['do_action'];
     $action($_GET['id']);
+  }
+
+  if ($_POST['acao'] == 'send-email') {
+    $post = get_post($_POST['post_id']);
+    $email = get_the_author_meta('email', $post->post_author);
+    $result = wp_mail($email, $_POST['subject'], $_POST['content']);
+    function feedbackEmail() {
+      if ($result) {
+        echo '<p class="feedback success"><b>Email enviado com sucesso.</b></p>';
+      } else {
+        echo '<p class="feedback error"><b>Falha ao enviar e-mail.</b></p>';
+      }
+    }
+    add_action('all_admin_notices', 'feedbackEmail');
   }
 }
 ?>

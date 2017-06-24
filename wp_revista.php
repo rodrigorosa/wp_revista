@@ -33,6 +33,7 @@ function inicializar()
   require_once( 'adiciona_metaboxes.php' );
   require_once( 'post_custom_fields.php' );
   require_once( 'adiciona_shortcodes_avaliacoes.php' );
+  require_once( 'adiciona_js.php' );
 }
 
 add_action( 'plugins_loaded', 'inicializar', 9999999999 ); //espera todos os plugins serem carregados

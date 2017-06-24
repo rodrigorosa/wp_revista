@@ -39,3 +39,16 @@ p.avaliacao-success {
   text-align: center;
   font-size: 150%;
 }
+
+.feedback {
+  padding: 5px;
+  border-radius: 5px;
+}
+
+.feedback.success {
+  background-color: #d9edf7
+}
+
+.feedback.error {
+  background-color: #f2dede
+}
