@@ -94,7 +94,7 @@ if ( !function_exists( 'registrar_artigos' ) ) {
     echo '<div id="enviar-email" style="display:none;">
       <h3>Enviar e-mail para autor</h3>
       <form class="validate" method="POST">
-        <input type="hidden" id="post_id" name="post_id" value="' . $id . '" >
+        <input type="hidden" id="post_id" name="id" value="' . $id . '" >
         <div class="form-field form-required">
           <label for="subject">Assunto</label>
           <input type="text" name="subject" placeholder="Assunto" required />
@@ -105,7 +105,7 @@ if ( !function_exists( 'registrar_artigos' ) ) {
           <textarea rows="10" name="content"></textarea>
         </div>
 
-        <button type="submit" name="acao" value="send-email" class="button">Enviar</button>
+        <button type="submit" name="do_action" value="sendEmail" class="button">Enviar</button>
       </form>
     </div>';
   }
@@ -145,10 +145,6 @@ if ( !function_exists( 'registrar_artigos' ) ) {
       $actions[] = '<a title="Enviar e-mail" class="button send-email" data-id="' . $post_id . '" rel="modal:open" href="#enviar-email">
       <i class="fa fa-envelope"></i></i></a>';
 
-      $actions[] = '<a title="Adicionar revisor" href="#ex1" rel="modal:open" class="button">
-        <i class="fa fa-share"></i></i></a>';
-
-
       if ($status != 'publish') {
         $actions[] = '<a title="Aprovar" class="button" href="' . admin_url('edit.php?post_type=artigo&id=' . $post_id . '&do_action=approve') . '">
           <i class="fa fa-check"></i></i></a>';
@@ -182,13 +178,8 @@ if ( !function_exists( 'registrar_artigos' ) ) {
     $service->rejeitar();
   }
 
-  if (isset($_GET['do_action'])) {
-    $action = $_GET['do_action'];
-    $action($_GET['id']);
-  }
-
-  if ($_POST['acao'] == 'send-email') {
-    $post = get_post($_POST['post_id']);
+  function sendEmail($id) {
+    $post = get_post($id);
     $email = get_the_author_meta('email', $post->post_author);
     $result = wp_mail($email, $_POST['subject'], $_POST['content']);
     function feedbackEmail() {
@@ -199,6 +190,14 @@ if ( !function_exists( 'registrar_artigos' ) ) {
       }
     }
     add_action('all_admin_notices', 'feedbackEmail');
+  }
+  $params = $_POST;
+  if (isset($_GET['do_action'])) {
+    $params = $_GET;
+  }
+  if (isset($params['do_action'])) {
+    $action = $params['do_action'];
+    $action($params['id']);
   }
 }
 ?>

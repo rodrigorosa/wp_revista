@@ -8,9 +8,7 @@ function prefix_add_my_stylesheet() {
   wp_enqueue_style( 'load-modal-css', 'https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.8.0/jquery.modal.css' );
 }
 
-    wp_register_style( 'load-modal-css', 'https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.8.0/jquery.modal.css' );
-    wp_enqueue_style( 'load-modal-css' );
-}
+add_action( 'wp_enqueue_scripts', 'prefix_add_my_stylesheet' );
 add_action( 'admin_enqueue_scripts', 'prefix_add_my_stylesheet' );
 
 ?>
