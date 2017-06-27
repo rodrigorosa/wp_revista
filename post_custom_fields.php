@@ -8,10 +8,36 @@
       return
       "{$this->getAuthorsHtml()}
       <section id=\"custom-fields\">
+        {$this->getAvaliacoes()}
         {$this->getSingleHtml('Resumo','abstract-pt-br')}
         {$this->getSingleHtml('Palavras-chave','keywords')}
         {$this->getSingleHtml('Abstract','abstract-en')}
       </section><hr />";
+    }
+
+    private function getAvaliacoes() {
+      $euSouSeuDono = $this->post->post_author == get_current_user_id();
+
+      if ($euSouSeuDono && $this->post->post_status == 'publish') {
+        return '';
+      }
+
+      $html = '<section class="artigo-avaliacoes">';
+      $postRevisao = new PostRevisao($this->post);
+      $avaliacoes = $postRevisao->avaliacoes();
+
+      $html .= '<h3>Avaliações</h3>';
+      foreach ($avaliacoes as $key => $item) {
+        $html .= '<h5>Avaliação enviada  em ' . formatarData($item['created_at']) . '</h5>';
+        $html .= '<ul>';
+        foreach ($postRevisao->getCriterios() as $key => $value) {
+          $html .= '<li><b>' . $value['label'] . ': ' . '</b>' . PostRevisao::getDescription($value, $item[$key]) . '</li>';
+        }
+
+        $html .= '</ul><hr>';
+      }
+
+      return $html . '</section>';
     }
 
     private function getAuthorsHtml() {

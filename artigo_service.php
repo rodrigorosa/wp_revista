@@ -27,7 +27,7 @@
     public function aprovar() {
       $this->alterarStatus('publish');
 
-      $this->enviarEmailAutor('Artigo aprovado', 'Parabéns. Seu artigo foi aprovado para publicação.');
+      $this->enviarEmailAutor('Artigo aprovado', 'Seu artigo foi aprovado para publicação.');
     }
 
     public function rejeitar() {
@@ -71,7 +71,9 @@
     }
 
     private function enviarEmailAutor($subject, $message) {
-      $nome = the_author($this->post->ID);
+      $nome = get_the_author_meta('first_name', $this->post->post_author) .
+                ' ' .
+                get_the_author_meta('last_name', $this->post->post_author);
 
       $link = get_permalink($this->post->ID);
       $link = "<a href=\"{$link}\">{$link}</a>";

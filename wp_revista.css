@@ -52,3 +52,17 @@ p.avaliacao-success {
 .feedback.error {
   background-color: #f2dede
 }
+
+
+.artigo-avaliacoes h4, .artigo-avaliacoes h3 {
+  margin: 0 0 5px;
+  padding: 0;
+}
+
+.artigo-avaliacoes ul {
+  margin-left: 30px;
+}
+
+.artigo-avaliacoes ul li {
+  text-align: justify;
+}
