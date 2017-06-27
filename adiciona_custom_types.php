@@ -91,10 +91,10 @@ if ( !function_exists( 'registrar_artigos' ) ) {
   add_action('admin_footer-post.php', 'jc_append_post_status_list');
 
   function adiciona_modais($id) {
-    echo '<div id="enviar-email" style="display:none;">
+    $modalEmail = '<div id="enviar-email" style="display:none;">
       <h3>Enviar e-mail para autor</h3>
       <form class="validate" method="POST">
-        <input type="hidden" id="post_id" name="id" value="' . $id . '" >
+        <input type="hidden" class="post-id" name="id" value="' . $id . '" >
         <div class="form-field form-required">
           <label for="subject">Assunto</label>
           <input type="text" name="subject" placeholder="Assunto" required />
@@ -108,6 +108,28 @@ if ( !function_exists( 'registrar_artigos' ) ) {
         <button type="submit" name="do_action" value="sendEmail" class="button">Enviar</button>
       </form>
     </div>';
+
+    $modalRevisor = '
+    <div id="add-avaliador" style="display:none;">
+      <h3>Novo Avaliador</h3>
+      <form class="validate" method="POST">
+        <input type="hidden" class="post-id" name="id" value="' . $id . '" >
+
+        <div class="form-field form-required">
+          <label for="name">Nome</label>
+          <input type="text" name="name_" placeholder="Nome" required>
+        </div>
+
+        <div class="form-field form-required">
+          <label for="email">e-Mail</label>
+          <input type="email" name="email" placeholder="e-Mail" required>
+        </div>
+
+        <button type="submit" name="do_action" value="adicionarAvaliador" class="button">Adicionar</button>
+      </form>
+    </div>';
+
+    echo $modalEmail . $modalRevisor;
   }
   add_action('all_admin_notices', 'adiciona_modais');
 
@@ -142,10 +164,13 @@ if ( !function_exists( 'registrar_artigos' ) ) {
     if ($column_name == 'actions') {
       $actions = array();
 
-      $actions[] = '<a title="Enviar e-mail" class="button send-email" data-id="' . $post_id . '" rel="modal:open" href="#enviar-email">
+      $actions[] = '<a title="Enviar e-mail" class="button action-with-post-id" data-id="' . $post_id . '" rel="modal:open" href="#enviar-email">
       <i class="fa fa-envelope"></i></i></a>';
 
       if ($status != 'publish') {
+        $actions[] = '<a title="Adicionar avaliador" class="button action-with-post-id" data-id="' . $post_id . '" rel="modal:open" href="#add-avaliador">
+        <i class="fa fa-share"></i></i></a>';
+
         $actions[] = '<a title="Aprovar" class="button" href="' . admin_url('edit.php?post_type=artigo&id=' . $post_id . '&do_action=approve') . '">
           <i class="fa fa-check"></i></i></a>';
       }
@@ -191,6 +216,24 @@ if ( !function_exists( 'registrar_artigos' ) ) {
     }
     add_action('all_admin_notices', 'feedbackEmail');
   }
+
+  function adicionarAvaliador($id) {
+    $post = get_post($id);
+
+    $service = new ArtigoService($post);
+    $revisor = array(
+      'name' => $_POST['name_'],
+      'email' => $_POST['email']
+    );
+    $service->addRevisor($revisor);
+
+    function feedbackAvaliador() {
+      // TODO: Validar se de fato foi adicionado com sucesso
+      echo '<p class="feedback success"><b>Revisor adicionado com sucesso.</b></p>';
+    }
+    add_action('all_admin_notices', 'feedbackAvaliador');
+  }
+
   $params = $_POST;
   if (isset($_GET['do_action'])) {
     $params = $_GET;

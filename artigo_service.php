@@ -5,6 +5,7 @@
     }
 
     function addRevisor($revisor) {
+      $revisor['token'] = bin2hex(random_bytes(32));
       // Adiciona revisor
       add_post_meta($this->post->ID, 'revisores', $revisor);
 
@@ -52,7 +53,7 @@
       }
 
       add_filter( 'wp_mail_content_type', 'wpdocs_set_html_mail_content_type' );
-      $link = get_post_permalink($this->post->ID). '&r=' . $revisor['token'];
+      $link = get_permalink($this->post->ID). '&r=' . $revisor['token'];
       $link = "<a href=\"{$link}\">{$link}</a>";
       $subject = 'Convite para editar ' . get_option('blogname');
       $email = "<h2>Olá, {$revisor['name']}. Você foi indicado para avaliar o artigo {$this->post->post_title}</h2>.";

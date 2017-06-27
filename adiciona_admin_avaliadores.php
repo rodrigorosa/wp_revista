@@ -9,7 +9,6 @@
     $id = isset($_GET['post']) ? $_GET['post'] : NULL;
 
     if ($id != NULL) {
-      add_thickbox();
       $revisores = get_post_meta($id, 'revisores'); ?>
 
       <b>Revisores</b>
@@ -25,14 +24,24 @@
       </ul>
 
       <div>
-        <a href="#TB_inline?title=Novo revisor&width=400&height=400&inlineId=modal-add-revisor" class="thickbox">Adicionar revisor</a>
+        <a title="Adicionar avaliador" class="button" rel="modal:open" href="#modal-add-revisor">
+          <i class="fa fa-share"></i></i> Adicionar Revisor
+        </a>
       </div>
 
       <div id="modal-add-revisor" style="display:none;">
-        <div class="container-modal-add-revisor">
-          <h3>Novo revisor</h3>
-          <input data-avaliador="name" placeholder="Nome"><br>
-          <input data-avaliador="email" placeholder="e-Mail"><br>
+        <h3>Novo Avaliador</h3>
+        <div class="container-modal-add-revisor validate">
+          <div class="form-field form-required">
+            <label for="name">Nome</label>
+            <input id="name" data-avaliador="name" placeholder="Nome">
+          </div>
+
+          <div class="form-field form-required">
+            <label for="email">e-Mail</label>
+            <input data-avaliador="email" placeholder="e-Mail" id="email">
+          </div>
+
           <button type="button" id="add-revisor" class="button">Adicionar</button>
         </div>
       </div>
@@ -42,7 +51,6 @@
 
         if ($addAvaliador) {
           $revisor = array(
-            'token' => bin2hex(random_bytes(32)),
             'name' => $_POST['name'],
             'email' => $_POST['email']
           );
@@ -55,10 +63,6 @@
       <script>
         jQuery(() => {
           jQuery('#add-revisor').on('click', (event) => {
-            let button = jQuery('#add-revisor');
-            button.attr('disabled', true);
-            button.text('Enviando...');
-
             let payload = jQuery('[data-avaliador]').toArray().reduce((result, input) => {
               let el = jQuery(input);
               result[el.data('avaliador')] = el.val();
@@ -71,6 +75,10 @@
               alert('Preencha todos os dados corretamente.');
               return;
             }
+
+            let button = jQuery('#add-revisor');
+            button.attr('disabled', true);
+            button.text('Enviando...');
 
             jQuery('body').css('cursor', 'progress');
             jQuery.post(window.location.href, payload).done(() => {
