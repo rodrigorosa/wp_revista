@@ -181,9 +181,9 @@ if ( !function_exists( 'registrar_artigos' ) ) {
   function sendEmail($id) {
     $post = get_post($id);
     $email = get_the_author_meta('email', $post->post_author);
-    $result = wp_mail($email, $_POST['subject'], $_POST['content']);
+    $_POST['email_result'] = wp_mail($email, $_POST['subject'], $_POST['content']);
     function feedbackEmail() {
-      if ($result) {
+      if ($_POST['email_result']) {
         echo '<p class="feedback success"><b>Email enviado com sucesso.</b></p>';
       } else {
         echo '<p class="feedback error"><b>Falha ao enviar e-mail.</b></p>';
