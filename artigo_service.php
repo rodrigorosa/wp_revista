@@ -20,22 +20,20 @@
       add_post_meta($this->post->ID, 'avaliacoes', $_POST);
       $this->alterarStatus('revisado');
 
-      // TODO: Enviar e-mail para autor/editor
-      // Enviar e-mail para autor com informação de avaliação (Link)
+      $this->enviarEmailAutor('Artigo avaliado', 'Acesse o link para conferir a avaliação do seu artigo.');
+      $this->enviarEmailEditores('Artigo avaliado', 'Acesse o link para conferir a avaliação do seu artigo.');
     }
 
     public function aprovar() {
       $this->alterarStatus('publish');
 
-      // TODO: Enviar e-mail para autor
-      // Enviar e-mail para o artigo com aprovação
+      $this->enviarEmailAutor('Artigo aprovado', 'Parabéns. Seu artigo foi aprovado para publicação.');
     }
 
     public function rejeitar() {
       $this->alterarStatus('trash');
 
-      // TODO: Enviar e-mail para autor
-      // Autor recebe e-mail
+      $this->enviarEmailAutor('Artigo rejeitado', 'Seu artigo não foi aprovado para publicação.');
     }
 
     private function alterarStatus($status) {
@@ -47,20 +45,70 @@
       wp_transition_post_status($status, $this->post->post_status, $this->post);
     }
 
-    private function enviarEmailRevisor($revisor) {
-      function wpdocs_set_html_mail_content_type() {
-        return 'text/html';
+    private function enviarEmail($to, $subject, $content) {
+      if ( !function_exists( 'wpdocs_set_html_mail_content_type' ) ) {
+        function wpdocs_set_html_mail_content_type() {
+          return 'text/html';
+        }
       }
-
       add_filter( 'wp_mail_content_type', 'wpdocs_set_html_mail_content_type' );
+
+      // DEBUG para desenvolvimento
+      //echo 'Enviando e-mail para ' . $to . ' com assunto ' .  $subject;
+      //echo $content;
+      return wp_mail($to, $subject, $content);
+    }
+
+    private function enviarEmailRevisor($revisor) {
       $link = get_permalink($this->post->ID). '&r=' . $revisor['token'];
       $link = "<a href=\"{$link}\">{$link}</a>";
       $subject = 'Convite para editar ' . get_option('blogname');
-      $email = "<h2>Olá, {$revisor['name']}. Você foi indicado para avaliar o artigo {$this->post->post_title}</h2>.";
+      $email = "<h2>Olá, {$revisor['name']}. Você foi indicado para avaliar o artigo {$this->post->post_title}</h2>";
       $email .= "<p>Você pode acessar o artigo através do link: {$link}</p>";
       $email .= '<p>Para mais informações acesse: <a href="' . get_site_url() . '">' . get_site_url() . '</a></p>';
 
-      $result = wp_mail($revisor['email'], $subject, $email);
+      return $this->enviarEmail($revisor['email'], $subject, $email);
+    }
+
+    private function enviarEmailAutor($subject, $message) {
+      $nome = the_author($this->post->ID);
+
+      $link = get_permalink($this->post->ID);
+      $link = "<a href=\"{$link}\">{$link}</a>";
+
+      $subject = '[' . get_option('blogname') . '] ' .$subject;
+
+      $email = "<h2>Olá, {$nome}. Informações sobre o seu artigo {$this->post->post_title}</h2>";
+      $email .= "<p>Você pode acessar o artigo através do link: {$link}</p>";
+
+      $email .= "<p>{$message}</p>";
+
+      $email .= '<p>Para mais informações acesse: <a href="' . get_site_url() . '">' . get_site_url() . '</a></p>';
+
+      return $this->enviarEmail(get_the_author_meta('email', $this->post->post_author), $subject, $email);
+    }
+
+    private function enviarEmailEditores($subject, $message) {
+      $users = get_users(array(role__in => array('editor', 'administrator')));
+      $emails = array();
+      foreach ($users as $user) {
+        $emails[] = $user->user_email;
+      }
+
+      $link = get_edit_post_link($this->post->ID);
+      $link = "<a href=\"{$link}\">{$link}</a>";
+
+      $subject = '[' . get_option('blogname') . '] ' .$subject;
+
+      $email = "<h2>Olá, Editor. Informações sobre o artigo {$this->post->post_title}</h2>";
+      $email .= "<p>Você pode acessar o artigo através do link: {$link}</p>";
+
+      $email .= "<p>{$message}</p>";
+
+      $email .= '<p>Para mais informações acesse: <a href="' . get_admin_url() . '">' . get_admin_url() . '</a></p>';
+
+
+      return $this->enviarEmail($emails, $subject, $email);
     }
   }
 ?>
