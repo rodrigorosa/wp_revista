@@ -55,7 +55,8 @@ if ( !function_exists( 'registrar_artigos' ) ) {
 			'description' => $descricao,
 			'public' => true,
 			'menu_icon' => 'dashicons-admin-home',
-			'supports' => $supports
+			'supports' => $supports,
+      'taxonomies' => array('post_tag')
 		);
 
 

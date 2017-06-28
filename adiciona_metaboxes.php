@@ -31,16 +31,6 @@ function add_content_before_editor() {
   <hr>
 <?php } ?>
 
-<b>Autores: </b><?= get_post_meta(get_post()->ID, 'authors')[0] ?>
-<br /><br />
-<b>Resumo: </b> <?= get_post_meta(get_post()->ID, 'abstract-pt-br')[0] ?>
-<br /><br />
-<b>Abstract</b>: <?= get_post_meta(get_post()->ID, 'abstract-en')[0] ?>
-<br /><br />
-<b>Keywords</b>: <?= get_post_meta(get_post()->ID, 'keywords')[0] ?>
-<br /><br />
-<b>Referências</b>: <?= get_post_meta(get_post()->ID, 'references')[0] ?>
-
 <?php
 }
 

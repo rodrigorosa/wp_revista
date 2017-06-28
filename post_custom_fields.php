@@ -26,6 +26,10 @@
       $postRevisao = new PostRevisao($this->post);
       $avaliacoes = $postRevisao->avaliacoes();
 
+      if (count($avaliacoes) == 0) {
+        return '';
+      }
+
       $html .= '<h3>Avaliações</h3>';
       foreach ($avaliacoes as $key => $item) {
         $html .= '<h5>Avaliação enviada  em ' . formatarData($item['created_at']) . '</h5>';

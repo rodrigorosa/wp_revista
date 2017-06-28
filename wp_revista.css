@@ -17,7 +17,7 @@
   height: auto;
 }
 
-#authors {
+.entry-content #authors {
   text-align: right;
 }
 
@@ -65,4 +65,15 @@ p.avaliacao-success {
 
 .artigo-avaliacoes ul li {
   text-align: justify;
+}
+
+.meta-box-artigo {
+  padding: 0 12px 12px;
+  line-height: 1.4em;
+  font-size: 13px;
+}
+
+.meta-box-artigo input, .meta-box-artigo textarea {
+  width: 99%;
+  padding-top: 6px;
 }
